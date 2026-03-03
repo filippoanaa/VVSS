@@ -120,31 +120,42 @@ public class DrinkShopController {
             alert.setHeaderText("Selectati o reteta pentru care adugati un produs");
             alert.showAndWait();
             return;
-        }else
-        if (service.getAllProducts().stream().filter(p->p.getId()==r.getId()).toList().size()>0) {
+        }else if (!service.getAllProducts().stream().filter(p -> p.getId() == r.getId()).toList().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setHeaderText("Exista un produs cu reteta adaugata.");
             alert.showAndWait();
             return;
         }
-        Product p = new Product(r.getId(),
-                txtProdName.getText(),
-                Double.parseDouble(txtProdPrice.getText()),
-                comboProdCategorie.getValue(),
-                comboProdTip.getValue());
-        service.addProduct(p);
-        initData();
+        try {
+            Product p = new Product(r.getId(),
+                    txtProdName.getText(),
+                    Double.parseDouble(txtProdPrice.getText()),
+                    comboProdCategorie.getValue(),
+                    comboProdTip.getValue());
+            service.addProduct(p);
+            initData();
+        } catch (NumberFormatException e) {
+            showError("Prețul introdus nu este valid.");
+        } catch (ValidationException e) {
+            showError(e.getMessage());
+        }
     }
 
     @FXML
     private void onUpdateProduct() {
         Product selected = productTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
-        service.updateProduct(selected.getId(), txtProdName.getText(),
-                Double.parseDouble(txtProdPrice.getText()),
-                comboProdCategorie.getValue(), comboProdTip.getValue());
-        initData();
+        try {
+            service.updateProduct(selected.getId(), txtProdName.getText(),
+                    Double.parseDouble(txtProdPrice.getText()),
+                    comboProdCategorie.getValue(), comboProdTip.getValue());
+            initData();
+        } catch (NumberFormatException e) {
+            showError("Prețul introdus nu este valid.");
+        } catch (ValidationException e) {
+            showError(e.getMessage());
+        }
     }
 
     @FXML
@@ -168,8 +179,12 @@ public class DrinkShopController {
     // ---------- RETETA NOUA ----------
     @FXML
     private void onAddNewIngred() {
-        newRetetaList.add(new IngredientReteta(txtNewIngredName.getText(),
-                Double.parseDouble(txtNewIngredCant.getText())));
+        try {
+            newRetetaList.add(new IngredientReteta(txtNewIngredName.getText(),
+                    Double.parseDouble(txtNewIngredCant.getText())));
+        } catch (NumberFormatException e) {
+            showError("Cantitatea introdusă nu este validă.");
+        }
     }
 
     @FXML
@@ -180,10 +195,14 @@ public class DrinkShopController {
 
     @FXML
     private void onAddNewReteta() {
-        Reteta r = new Reteta(service.getAllRetete().size()+1, new ArrayList<>(newRetetaList));
-        service.addReteta(r);
-        newRetetaList.clear();
-        initData();
+        try {
+            Reteta r = new Reteta(service.getAllRetete().size()+1, new ArrayList<>(newRetetaList));
+            service.addReteta(r);
+            newRetetaList.clear();
+            initData();
+        } catch (ValidationException e) {
+            showError(e.getMessage());
+        }
     }
 
     @FXML
@@ -227,12 +246,16 @@ public class DrinkShopController {
         currentOrder.getItems().addAll(currentOrderItems);
         currentOrder.computeTotalPrice();
 
-        service.addOrder(currentOrder);
-        txtReceipt.setText(service.generateReceipt(currentOrder));
+        try {
+            service.addOrder(currentOrder);
+            txtReceipt.setText(service.generateReceipt(currentOrder));
 
-        currentOrderItems.clear();
-        currentOrder = new Order(currentOrder.getId() + 1);
-        updateOrderTotal();
+            currentOrderItems.clear();
+            currentOrder = new Order(currentOrder.getId() + 1);
+            updateOrderTotal();
+        } catch (ValidationException e) {
+            showError(e.getMessage());
+        }
     }
 
     private void updateOrderTotal() {

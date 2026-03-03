@@ -16,13 +16,17 @@ public abstract class FileAbstractRepository<ID, E>
 
     protected void loadFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-
             String line;
             while ((line = br.readLine()) != null) {
-                E entity = extractEntity(line);
-                super.save(entity);
+                try {
+                    E entity = extractEntity(line);
+                    if (entity != null) {
+                        super.save(entity);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Eroare la procesarea liniei: " + line + ". Eroare: " + e.getMessage());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

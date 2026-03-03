@@ -4,6 +4,7 @@ import mydrinkshop.domain.Order;
 import mydrinkshop.domain.OrderItem;
 import mydrinkshop.domain.Product;
 import mydrinkshop.repository.Repository;
+import mydrinkshop.service.validator.OrderValidator;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class OrderService {
 
     private final Repository<Integer, Order> orderRepo;
     private final Repository<Integer, Product> productRepo;
+    private final OrderValidator validator = new OrderValidator();
 
     public OrderService(Repository<Integer, Order> orderRepo, Repository<Integer, Product> productRepo) {
         this.orderRepo = orderRepo;
@@ -19,10 +21,12 @@ public class OrderService {
     }
 
     public void addOrder(Order o) {
+        validator.validate(o);
         orderRepo.save(o);
     }
 
     public void updateOrder(Order o) {
+        validator.validate(o);
         orderRepo.update(o);
     }
 

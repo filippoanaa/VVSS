@@ -19,16 +19,23 @@ public class FileProductRepository
 
     @Override
     protected Product extractEntity(String line) {
-
         String[] elems = line.split(",");
 
-        int id = Integer.parseInt(elems[0]);
-        String name = elems[1];
-        double price = Double.parseDouble(elems[2]);
-        CategorieBautura categorie = CategorieBautura.valueOf(elems[3]);
-        TipBautura tip = TipBautura.valueOf(elems[4]);
+        if (elems.length < 5) {
+            throw new IllegalArgumentException("Format linie invalid pentru Produs (lipsesc coloane): " + line);
+        }
 
-        return new Product(id, name, price, categorie, tip);
+        try {
+            int id = Integer.parseInt(elems[0]);
+            String name = elems[1];
+            double price = Double.parseDouble(elems[2]);
+            CategorieBautura categorie = CategorieBautura.valueOf(elems[3]);
+            TipBautura tip = TipBautura.valueOf(elems[4]);
+
+            return new Product(id, name, price, categorie, tip);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Eroare la conversia datelor pentru produs: " + e.getMessage());
+        }
     }
 
     @Override
