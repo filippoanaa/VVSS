@@ -2,7 +2,7 @@ package mydrinkshop.domain;
 
 public class Stoc {
 
-    private int id;
+    private final int id;
     private String ingredient;
     private double cantitate;
     private double stocMinim;

@@ -32,7 +32,7 @@ public class FileRetetaRepository
             String ingredientTotal= elems[index++];
             String[] ingredientSeparat = ingredientTotal.split(":");
             String ingredientName = ingredientSeparat[0];
-            Double ingredientQuantity = Double.parseDouble(ingredientSeparat[1]);
+            double ingredientQuantity = Double.parseDouble(ingredientSeparat[1]);
             ingrediente.add(new IngredientReteta(ingredientName, ingredientQuantity));
         }
         return new Reteta(productId, ingrediente);

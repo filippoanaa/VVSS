@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Order implements Serializable {
 
-    private int id;
+    private final int id;
     private List<OrderItem> items;
     private double totalPrice;
 
