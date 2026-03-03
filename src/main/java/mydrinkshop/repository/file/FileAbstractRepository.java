@@ -1,47 +1,49 @@
 package mydrinkshop.repository.file;
 
 import mydrinkshop.repository.AbstractRepository;
+import mydrinkshop.repository.RepositoryException;
 
 import java.io.*;
 
-public abstract class FileAbstractRepository<ID, E>
-        extends AbstractRepository<ID, E> {
+public abstract class FileAbstractRepository<I, E>
+        extends AbstractRepository<I, E> {
 
     protected String fileName;
 
-    public FileAbstractRepository(String fileName) {
+    protected FileAbstractRepository(String fileName) {
         this.fileName = fileName;
-        //loadFromFile();
     }
 
     protected void loadFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
-                try {
-                    E entity = extractEntity(line);
-                    if (entity != null) {
-                        super.save(entity);
-                    }
-                } catch (Exception e) {
-                    System.err.println("Eroare la procesarea liniei: " + line + ". Eroare: " + e.getMessage());
-                }
+                processLine(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RepositoryException("Failed to load from file: " + fileName, e);
+        }
+    }
+
+    private void processLine(String line) {
+        try {
+            E entity = extractEntity(line);
+            if (entity != null) {
+                super.save(entity);
+            }
+        } catch (Exception e) {
+            throw new RepositoryException("Error processing line: " + line, e);
         }
     }
 
     private void writeToFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-
             for (E entity : entities.values()) {
                 bw.write(createEntityAsString(entity));
                 bw.newLine();
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RepositoryException("Failed to write to file: " + fileName, e);
         }
     }
 
@@ -53,7 +55,7 @@ public abstract class FileAbstractRepository<ID, E>
     }
 
     @Override
-    public E delete(ID id) {
+    public E delete(I id) {
         E e = super.delete(id);
         writeToFile();
         return e;

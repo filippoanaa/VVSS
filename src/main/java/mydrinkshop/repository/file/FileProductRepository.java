@@ -3,6 +3,7 @@ package mydrinkshop.repository.file;
 import mydrinkshop.domain.Product;
 import mydrinkshop.domain.CategorieBautura;
 import mydrinkshop.domain.TipBautura;
+import mydrinkshop.repository.RepositoryException;
 
 public class FileProductRepository
         extends FileAbstractRepository<Integer, Product> {
@@ -34,7 +35,7 @@ public class FileProductRepository
 
             return new Product(id, name, price, categorie, tip);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Eroare la conversia datelor pentru produs: " + e.getMessage());
+            throw new RepositoryException("Eroare la conversia datelor pentru produs: " + e.getMessage(), e);
         }
     }
 

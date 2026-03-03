@@ -35,8 +35,6 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-//        return StreamSupport.stream(orderRepo.findAll().spliterator(), false)
-//                .collect(Collectors.toList());
         return orderRepo.findAll();
     }
 

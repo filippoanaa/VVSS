@@ -26,7 +26,7 @@ public class RetetaValidator implements Validator<Reteta> {
             }
         }
 
-        if (errors.length() > 0)
+        if (!errors.isEmpty())
             throw new ValidationException(errors.toString());
     }
 }

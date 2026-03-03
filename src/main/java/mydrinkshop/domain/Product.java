@@ -1,8 +1,10 @@
 package mydrinkshop.domain;
 
-public class Product {
+import java.io.Serializable;
 
-    private int id;
+public class Product implements Serializable {
+
+    private final int id;
     private String nume;
     private double pret;
     private CategorieBautura categorie;
