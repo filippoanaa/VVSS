@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import mydrinkshop.service.validator.StocValidator;
+import mydrinkshop.service.validator.Validator;
 
 public class DrinkShopApp extends Application {
 
@@ -23,8 +25,11 @@ public class DrinkShopApp extends Application {
         Repository<Integer, Reteta> retetaRepo = new FileRetetaRepository("data/retete.txt");
         Repository<Integer, Stoc> stocRepo = new FileStocRepository("data/stocuri.txt");
 
+        // ---------- Initializare Validator-i ----------
+        Validator<Stoc> stocValidator = new StocValidator();
+
         // ---------- Initializare Service ----------
-        DrinkShopService service = new DrinkShopService(productRepo, orderRepo, retetaRepo, stocRepo);
+        DrinkShopService service = new DrinkShopService(productRepo, orderRepo, retetaRepo, stocRepo, stocValidator);
 
         // ---------- Incarcare FXML ----------
 
