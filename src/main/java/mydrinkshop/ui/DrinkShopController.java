@@ -122,7 +122,7 @@ public class DrinkShopController {
             alert.setHeaderText("Selectati o reteta pentru care adugati un produs");
             alert.showAndWait();
             return;
-        }else if (!service.getAllProducts().stream().filter(p -> p.getId() == r.getId()).toList().isEmpty()) {
+        }else if (service.getAllProducts().stream().anyMatch(p -> p.getId() == r.getId())) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setHeaderText("Exista un produs cu reteta adaugata.");

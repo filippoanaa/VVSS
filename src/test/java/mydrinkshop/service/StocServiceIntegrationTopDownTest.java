@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -88,7 +89,7 @@ public class StocServiceIntegrationTopDownTest {
         FileStocRepository repo2 = new FileStocRepository(tmp.toString());
         List<Stoc> lapteList = repo2.findAll().stream()
                 .filter(s -> s.getIngredient().equalsIgnoreCase("Lapte"))
-                .toList();
+                .collect(Collectors.toList());
 
         assertEquals(2, lapteList.size());
 
@@ -99,4 +100,3 @@ public class StocServiceIntegrationTopDownTest {
         assertEquals(1.0, a2.getCantitate(), 1e-9);
     }
 }
-
