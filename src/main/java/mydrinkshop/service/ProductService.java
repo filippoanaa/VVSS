@@ -9,10 +9,11 @@ import java.util.List;
 public class ProductService {
 
     private final Repository<Integer, Product> productRepo;
-    private final ProductValidator validator = new ProductValidator();
+    private final ProductValidator validator;
 
     public ProductService(Repository<Integer, Product> productRepo) {
         this.productRepo = productRepo;
+        this.validator = new ProductValidator();
     }
 
     public void addProduct(Product p) {

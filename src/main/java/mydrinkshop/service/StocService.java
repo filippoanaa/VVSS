@@ -5,16 +5,24 @@ import mydrinkshop.domain.Reteta;
 import mydrinkshop.domain.Stoc;
 import mydrinkshop.repository.Repository;
 import mydrinkshop.service.validator.StocValidator;
+import mydrinkshop.service.validator.Validator;
 
 import java.util.List;
 
 public class StocService {
 
     private final Repository<Integer, Stoc> stocRepo;
-    private final StocValidator validator = new StocValidator();
+
+    private final Validator<Stoc> validator;
+
+    public StocService(Repository<Integer, Stoc> stocRepo, Validator<Stoc> stocValidator) {
+        this.stocRepo = stocRepo;
+        this.validator = stocValidator;
+    }
 
     public StocService(Repository<Integer, Stoc> stocRepo) {
         this.stocRepo = stocRepo;
+        this.validator = new StocValidator();
     }
 
     public List<Stoc> getAll() {
